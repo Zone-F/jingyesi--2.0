@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>个人中心</title>
+    <link href="https://cdn.bootcss.com/normalize/8.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="/CSS/common.css">
+    <link rel="stylesheet" href="/CSS/footer.css">
+    <link rel="stylesheet" href="../CSS/topbar.css">
+    <style>
+        img {
+            display: block;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
+        .warp{
+            width: 1090px;
+            margin: 0 auto;
+        }
+        .info-box{
+            width: 500px;
+            height:350px;
+            border-right: 1px solid black
+        }
+        .article-box{
+            height:350px;position: relative;
+        }
+        .article-box p{
+            padding-left: 20px;
+            font-family: 宋体;
+            margin-bottom:30px; 
+        }
+        .page{
+            position: absolute;
+            bottom:0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <%include ../common/topbar.html %>
+        <div class="warp" style="display:flex">
+            <div class="info-box">
+                <div class="info" style="display:flex;">
+                    <div style="padding:10px;border: 1px solid black;">
+                        <img src="/img/avatar/<%= avatar%>" alt="">
+                        <label for='my_file'>
+                            <i class="el-icon-upload el-icon--right"></i>
+                            修改头像
+                        </label>
+                        <input type="file" ref="upload" name="avatar" id='my_file' style="display:none;" accept="image/jpg"
+                            @change="changeAvatar" v-loading.fullscreen.lock="fullscreenLoading" />
+                    </div>
+                    <div style="padding:10px;font-family: 宋体">
+                        <p>昵称：
+                            <%= user%>
+                        </p>
+                        <p>邮箱：
+                            <%= email%>
+                        </p>
+                    </div>
+                </div>
+                <div style="width:200px;margin: 10px 0">
+                    <div style="margin-bottom:10px">
+                        <el-input v-model="username" placeholder="修改昵称"></el-input>
+                        <el-button type="primary" @click="changeUsername()">修改</el-button>
+                    </div>
+                    <div style="margin-bottom:10px">
+                        <el-input v-model="email" placeholder="修改邮箱"></el-input>
+                        <el-button type="primary" @click="changeEmail()">修改</el-button>
+                    </div>
+                </div>
+            </div>
+            <div class="article-box">
+
+                <p v-for="data in article"> <a href="jacascript::void(0)" @click="openArticle(data._id)">{{data.title}}
+                        {{data.time}}</a>
+                    <el-button type="success" size="mini" @click="updataArticle (data._id)">修改</el-button>
+                    <el-button type="danger" size="mini" @click="deleteArticle(data._id)">删除</el-button>
+                </p>
+
+                <div class="page">
+                    <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next"
+                        :current-page="currentPage" :total="dataLength" :pager-count="5">
+                    </el-pagination>
+                </div>
+            </div>
+        </div>
+        <%include ../common/footer.html %>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    fullscreenLoading: false,
+                    username: '',
+                    email: '',
+                    article: [],
+                    currentPage: 1,
+                    dataLength: 1
+                };
+            },
+            methods: {
+                // 分页发生变化
+                handleCurrentChange(currentPage) {
+                    this.currentPage = currentPage
+                    axios.post('/user/getarticle', {
+                            page: this.currentPage
+                        })
+                        .then((response) => {
+                            this.article = response.data
+                        })
+                },
+                //用户上传头像
+                changeAvatar(event) {
+                    this.fullscreenLoading = true;
+                    // let reader = new FileReader();
+                    let img = event.target.files[0];
+                    let Form = new FormData();
+                    Form.append('avatar', img);
+                    console.log(Form.get('avatar'));
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }; //添加请求头
+                    // axios({
+                    //     url: '/user/changeavatar',
+                    //     headers: {
+                    //         'Content-Type': 'multipart/form-data'
+                    //     },
+                    //     method: 'post',
+                    //     anync: true,
+                    //     contentType: false,
+                    //     processData: false,
+                    //     data: Form
+                    // })
+                    axios.post('/user/changeavatar', Form, config)
+                        .then((response) => {
+                            this.fullscreenLoading = false;
+                            if(response.status === 200){
+                                location.reload()
+                            }
+                        })
+                },
+                //获取文章
+                myArticle() {
+                    const loading = this.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                    //获取文章总数
+                    axios.get('/user/gettotle', {})
+                        .then((response) => {
+                            var total = Math.ceil(response.data.total / 5) * 10
+
+                            this.dataLength = total
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
+                    //获取文章
+                    axios.post('/user/getarticle', {
+                            page: this.currentPage
+                        })
+                        .then((response) => {
+                            loading.close();
+                            this.article = response.data
+                        })
+                        .catch((error) => {
+                            loading.close();
+                            console.log(error)
+                        })
+                },
+                openArticle(id) {
+                    var url = 'http://127.0.0.1:3000/paper?id=' + id
+                    window.open(url)
+                },
+                //更改用户名
+                changeUsername() {
+                    const loading = this.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                    axios.post('/user/changeuser', {
+                            username: this.username
+                        }).then((response) => {
+                            loading.close();
+                            if (response.status == 200) {
+                                this.$message.success("修改用户名成功")
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000)
+
+                            } else {
+                                this.$message.error("修改用户名失败")
+                            }
+
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
+                },
+                //更改邮箱
+                changeEmail() {
+                    const loading = this.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                    axios.post('/user/changeemail', {
+                            email: this.email
+                        }).then((response) => {
+                            loading.close();
+
+                            if (response.status == 200) {
+                                this.$message.success('修改邮箱成功');
+
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000)
+
+                            } else {
+                                this.$message.error("修改邮箱失败")
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
+                },
+                //更新文章
+                updataArticle(id) {
+                    window.location.href = 'http://127.0.0.1:3000/updata?id=' + id
+                },
+                //删除文章
+                deleteArticle(id) {
+                    axios.post('/user/delete', {
+                            id: id
+                        })
+                        .then((response) => {
+                            if (response.status == 200) {
+                                this.$message.success("删除成功")
+
+                            } else {
+                                this.$message.error("删除成功")
+                            }
+
+                            setTimeout(function () {
+                                location.reload();
+                            }, 2000)
+                        })
+                        .catch((error) => {
+                            this.$message("操作失败")
+                        })
+                }
+            },
+            created() {
+                this.myArticle()
+            }
+        })
+    </script>
+</body>
+
+</html>

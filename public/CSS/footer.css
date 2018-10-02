@@ -1,0 +1,18 @@
+.footer {
+    margin-top: 80px;
+    background-color: whitesmoke;
+}
+
+.footerCenter {
+    margin: 0 auto;
+    padding-top: 30px;
+    padding-bottom: 180px;
+    width: 1096px;
+}
+.footerCenter .links {
+    margin-bottom: 16px;
+}
+.footerCenter .links a {
+    margin-right: 22px;
+    color: #060606;
+}

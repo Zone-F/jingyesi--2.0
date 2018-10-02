@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../../CSS/common.css">
+    <link rel="stylesheet" href="../../CSS/topbar.css">
+    <title>Title</title>
+    <style>
+        .warp{
+            width: 800px;
+            margin: 0 auto;
+            padding-top: 50px;
+            height: auto;
+            font-family: 宋体;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <%include ../common/topbar.html %>
+
+        <div class="warp">
+            <el-tabs style="width:680px" v-model="activeName" tab-position="left" @tab-click="showOld">
+                <el-tab-pane label="参加活动" name="first">
+                    <el-form ref="newAct" :model="newAct" status-icon label-width="80px" :rules="formrules.actRule">
+                        <el-form-item label="活动主题" prop="topic">
+                            <el-input v-model="newAct.topic" placeholder="活动主题"></el-input>
+                        </el-form-item>
+                        <el-form-item label="活动时间">
+                            <el-col :span="11">
+                                <el-form-item prop="begdate">
+                                    <el-date-picker type="date" placeholder="开始日期" format="yyyy 年 MM 月 dd 日"
+                                        value-format="yyyy-MM-dd" v-model="newAct.begdate">
+                                    </el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                            <el-col class="line" :span="2">-</el-col>
+                            <el-col :span="11">
+                                <el-form-item prop="enddate">
+                                    <el-date-picker type="date" placeholder="结束日期" format="yyyy 年 MM 月 dd 日"
+                                        value-format="yyyy-MM-dd" prop="enddate" v-model="newAct.enddate"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-form-item>
+                        <el-form-item label="图书1" prop="book">
+                            <el-input v-model="newAct.book" placeholder="请加上书名号"></el-input>
+                        </el-form-item>
+                        <el-form-item label="图书2" prop="rebook">
+                            <el-input v-model="newAct.rebook" placeholder="请加上书名号"></el-input>
+                        </el-form-item>
+                        <el-form-item size="small">
+                            <el-button type="primary" @click="newTopic()" v-loading.fullscreen.lock="fullscreenLoading"
+                                :disabled="!islive" plain>立即创建</el-button>
+                            <el-button native-type="reset">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+                <el-tab-pane label="正在进行" name="second">
+                    <!--参与人员列表-->
+                    <p>发起人:<span style="margin: 5px;" class="username">{{actInfo.user}}</span></p>
+                    <hr />
+                    <p>参与人员:<span style="margin: 5px;" v-for="user in actInfo.users" :key="user.id" class="username">{{user}}</span></p>
+                    <hr />
+                    活动时间: <span class="username">{{actInfo.begDate}}--{{actInfo.endDate}}</span>
+                    <hr>
+                    <!--图书选择多选框-->
+                    主选图书：
+                    <el-checkbox-group v-model="booklist">
+                        <el-checkbox style="margin-left: 10px" v-for="book in actInfo.bookList" :label="book" :key="book.id">
+                            <p class="check-box">{{book}}</p>
+                        </el-checkbox>
+                    </el-checkbox-group>
+                    <el-button type="primary" @click.native="joinCheck()" class="margin-top" plain>我要加入</el-button>
+                    <el-button type="primary" class="margin-top" plain @click="newTopicList" :disabled="islive">
+                        <i class="el-icon-tickets"></i>生成书单</el-button>
+                    <el-button type="primary" @click.native="addFormVisible = true" class="margin-top" plain>添加图书</el-button>
+                    <hr>
+                    <el-dialog title="提交书籍" :visible.sync="dialogFormVisible">
+                        <el-form :model="joinAct" ref="joinAct" :rules="formrules.joinRule">
+                            <el-form-item label="主选图书" prop="book">
+                                <el-input v-model="joinAct.book" placeHolder="请加上书名号"></el-input>
+                            </el-form-item>
+                            <el-form-item label="备选图书" prop="rebook">
+                                <el-input v-model="joinAct.rebook" placeholder="请加上书名号"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click.native="userJoin" v-loading.fullscreen.lock="fullscreenLoading">确
+                                定</el-button>
+                        </div>
+                    </el-dialog>
+                    <!-- 添加图书操作框 -->
+                    <el-dialog title="添加" :visible.sync="addFormVisible">
+                        <el-form ref="addBook" :rules="formrules.addRule">
+                            <el-form-item label="图书" prop="book">
+                                <el-input v-model="addBook" placeHolder="请加上书名号"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="addFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click.native="addbook()" v-loading.fullscreen.lock="fullscreenLoading">确
+                                定</el-button>
+                        </div>
+                    </el-dialog>
+                </el-tab-pane>
+                <el-tab-pane label="活动详情" name="third">
+                    <!--参与人员书单详情-->
+                    <el-table :data="actInfo.userInfo">
+                        <el-table-column type="expand">
+                            <template slot-scope="props">
+                                <el-form label-position="left" inline class="demo-table-expand">
+                                    <el-form-item label="书单">
+                                        <p v-for="book in props.row.booklist" :key="book.id">{{ book }}</p>
+                                    </el-form-item>
+                                </el-form>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="参与用户及个人书单" prop="user">
+                        </el-table-column>
+                    </el-table>
+                    <!--参与人员书单详情结束-->
+                </el-tab-pane>
+                <el-tab-pane label="往期活动" name="fourth">
+                    <el-card class="box-card">
+                        <div slot="header">
+                            <span>主题: <b>{{oldData.topic}}</b></span>
+                        </div>
+                        <el-collapse v-model="oldData.activeName" accordion>
+                            <el-collapse-item title="参与用户" name="1">
+                                <p><b>发起人:{{oldData.user}}</b></p>
+                                <p><b>参与用户:<span v-for="user in oldData.users" :key="user.id" style="margin-right: 10px;">{{user}}</span></b></p>
+                            </el-collapse-item>
+                            <el-collapse-item title="活动时间" name="2">
+                                <p><b>开始时间: {{oldData.begdate}}</b></p>
+                                <p><b>结束时间: {{oldData.enddate}}</b></p>
+                            </el-collapse-item>
+                            <el-collapse-item title="书单" name="3">
+                                <span v-for="book in oldData.book" :key="book.id"><b style="margin-right: 10px;">{{book}}</b></span>
+                            </el-collapse-item>
+                            <el-collapse-item title="用户书单及读后感" name="5">
+                                <el-card shadow="always" v-for="item in oldData.userinfo" :key="item.id">
+                                    <p><b>用户: {{item.user}}</b></p>
+                                    <p><b>书单:<span v-for="book in item.booklist" :key="book.id">{{book}}</span></b></p>
+                                </el-card>
+                            </el-collapse-item>
+                        </el-collapse>
+                    </el-card>
+                    <br>
+                    <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next"
+                        :current-page="old.currentPage" :total="old.dataLength">
+                    </el-pagination>
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    fullscreenLoading: false, // loading
+                    islive: true, // 控制按钮是否可按
+                    activeName: 'second', //TAB标签
+                    username: '',
+                    //新主题活动的表单
+                    newAct: {
+                        topic: '',
+                        begdate: '',
+                        enddate: '',
+                        book: '',
+                        rebook: '',
+                    },
+                    // 加入活动的表单
+                    joinAct: {
+                        book: '',
+                        rebook: '',
+                    },
+                    addBook: '',
+                    // 当前活动详情
+                    actInfo: {
+                        topic: '主题',
+                        user: '圆圆圆',
+                        users: ['朴家三千斤', '等待'],
+                        bookList: ['《阿吉》', '《点击》'],
+                        begDate: '2017-12-05',
+                        endDate: '2017-03-12',
+                        userInfo: [{
+                            user: '1',
+                            booklist: ['1', '2']
+                        }]
+                    },
+                    booklist: [],
+                    form: {
+                        articleForm: {
+                            article: '',
+                            articleTitle: ''
+                        }
+                    },
+                    // 所有表单的验证
+                    formrules: {
+                        addRule: {
+                            book: [{
+                                required: true,
+                                message: '不能为空',
+                                trigger: 'blur'
+                            }]
+                        },
+                        actRule: {
+                            topic: [{
+                                required: true,
+                                message: '主题不能为空',
+                                trigger: 'blur'
+                            }],
+                            begdate: [{
+                                required: true,
+                                message: '请选择日期',
+                                trigger: 'blur'
+                            }],
+                            enddate: [{
+                                required: true,
+                                message: '请选择日期',
+                                trigger: 'change'
+                            }],
+                            book: [{
+                                required: true,
+                                message: '不能为空',
+                                trigger: 'blur'
+                            }],
+                            rebook: [{
+                                required: true,
+                                message: '不能为空',
+                                trigger: 'blur'
+                            }]
+                        },
+                        joinRule: {
+                            book: [{
+                                required: true,
+                                message: '不能为空',
+                                trigger: 'blur'
+                            }],
+                            rebook: [{
+                                required: true,
+                                message: '不能为空',
+                                trigger: 'blur'
+                            }]
+                        }
+                    },
+                    dialogFormVisible: false,
+                    addFormVisible: false,
+                    old: {
+                        currentPage: 1,
+                        dataLength: 1,
+                    },
+                    oldData: {
+                        activeName: 1,
+                        topic: '群众',
+                        user: '123',
+                        users: ['1', '2'],
+                        book: ['1', '2'],
+                        begdate: '2016-1-21',
+                        enddata: '2016-1-21',
+                        userinfo: [{
+                            user: '1',
+                            booklist: ['1', '2']
+                        }]
+                    }
+                }
+            },
+            methods: {
+                // 获取行中活动的数据
+                nowdata() {
+                    axios.post('/topic/getdata', {})
+                        .then((response) => {
+                            if (response.status === 200) {
+                                this.actInfo.topic = response.data[0].topic
+                                this.actInfo.users = response.data[0].users
+                                this.actInfo.user = response.data[0].user
+                                this.actInfo.bookList = response.data[0].book
+                                this.actInfo.begDate = response.data[0].begdate
+                                this.actInfo.endDate = response.data[0].enddate
+                                this.actInfo.userInfo = response.data[0].userinfo
+                            }
+                            if (new Date() < new Date(this.$data.actInfo.endDate.replace(/-/g, '/'))) {
+                                // 活动尚在进行中
+                                this.$set(this.$data, 'islive', false)
+                            } else {
+                                // 当前活动已经结束
+                                this.$set(this.$data, 'islive', true)
+                            }
+                        })
+                },
+                // 获得当前用户名
+                getUser() {
+                    axios.get('/getUser', {})
+                        .then((response) => {
+                            if (response.status === 200) {
+                                this.username = response.data.user
+                            } else {
+                                this.$message.error('获取数据失败，请检查网络')
+                            }
+                        })
+                },
+                // 发起新的主题阅读
+                newTopic() {
+                    this.$refs.newAct.validate((valid) => {
+                        if (valid) {
+                            this.fullscreenLoading = true;
+                            axios.post('/topic/new', {
+                                    topic: this.newAct.topic,
+                                    begdate: this.newAct.begdate,
+                                    enddate: this.newAct.enddate,
+                                    book: this.newAct.book,
+                                    rebook: this.newAct.rebook,
+                                })
+                                .then((response) => {
+                                    if (response.status === 200) {
+                                        console.log(response)
+                                        this.$set(this.$data.actInfo, 'users', response.data.users)
+                                        this.$set(this.$data.actInfo, 'topic', response.data.topic)
+                                        this.$set(this.$data.actInfo, 'begDate', response.data.begdate)
+                                        this.$set(this.$data.actInfo, 'endDate', response.data.enddate)
+                                        this.$set(this.$data.actInfo, 'user', response.data.user)
+                                        this.$set(this.$data.actInfo, 'bookList', response.data.book)
+                                        this.$set(this.$data, 'islive', false)
+                                        this.$message.success('发起活动成功')
+                                        this.activeName = 'second'
+                                    }
+                                    this.fullscreenLoading = false;
+                                })
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                joinCheck() {
+                    let user = this.actInfo.users.find((value) => {
+                        return value == this.username
+                    })
+                    if (user) {
+                        this.$message.warning('您已经加入了活动')
+                        return false
+                    }
+                    this.dialogFormVisible = true
+                },
+                // 新用户加入活动
+                userJoin() {
+                    this.$refs.joinAct.validate((valid) => {
+                        if (valid) {
+                            axios.post('/topic/userjoin', {
+                                    book: this.joinAct.book,
+                                    rebook: this.joinAct.rebook,
+                                })
+                                .then((response) => {
+                                    console.log(response)
+                                    if (response.status === 200) {
+                                        this.$set(this.$data.actInfo, 'users',
+                                            response.data.users)
+                                        this.$set(this.$data.actInfo, 'bookList',
+                                            response.data.book)
+                                        this.$message.success('加入活动成功')
+                                    }
+                                    this.dialogFormVisible = false
+                                })
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    })
+                },
+                addbook() {
+                    fullscreenLoading: true, // loading
+                    axios.post('/topic/addbook', {
+                        book: this.addBook
+                    })
+                    .then((response) => {
+                        fullscreenLoading: false // loading
+
+                        if (response.status === 200) {
+                            this.$set(this.$data.actInfo, 'bookList', response.data.book)
+                            this.$message.success('图书添加成功')
+                        }
+                        
+                        this.addFormVisible = false
+                    })
+                },
+                // 用户生成书单
+                newTopicList() {
+                    let user = this.actInfo.users.find((value) => {
+                        return value == this.username
+                    })
+                    if (!user) {
+                        this.$message.warning('请先加入活动')
+                        return false
+                    }
+                    // 检查是否已经生成书单
+                    let list = ''
+                    this.actInfo.userInfo.forEach(item => {
+                        if (this.username == item.user) {
+                            list = true
+                            this.$message.warning('您已经生成过书单了')
+                            return false
+                        }
+                    });
+                    if (!list) {
+                        if (this.booklist.length === 0) {
+                            this.$message.warning('请选择书籍来生成书单')
+                        } else {
+                            let loading = this.$loading({
+                                lock: true,
+                                text: 'Loading',
+                                spinner: 'el-icon-loading'
+                            })
+                            axios.post('/topic/newlist', {
+                                    booklist: this.booklist
+                                })
+                                .then((response) => {
+                                    console.log(response)
+                                    if (response.status === 200) {
+                                        this.$set(this.$data.actInfo, 'userInfo', response.data.userinfo)
+                                        console.log(loading.close())
+                                        this.$message.success('书单生成成功')
+                                        this.activeName = 'third'
+                                    }
+                                })
+                        }
+                    }
+                },
+                // 获取往期活动的全部数据
+                showOld() {
+                    if (this.activeName === 'fourth') {
+                        // 获取总数
+                        axios.post('/topic/gettotal', {})
+                            .then((response) => {
+                                this.old.dataLength = response.data.total * 10;
+                            })
+
+                        axios.post('/topic/getold', {
+                                page: this.old.currentPage
+                            })
+                            .then((response) => {
+                                this.oldData = response.data[0]
+                            })
+                    }
+                },
+                // 分页发生变化
+                handleCurrentChange(currentPage) {
+                    this.old.currentPage = currentPage
+                    axios.post('/topic/getold', {
+                            page: this.old.currentPage
+                        })
+                        .then((response) => {
+                            console.log(response);
+                            this.oldData = response.data[0]
+                        })
+                }
+            },
+            created: function () {
+                this.nowdata()
+                this.getUser()
+            }
+        })
+    </script>
+</body>
+
+</html>

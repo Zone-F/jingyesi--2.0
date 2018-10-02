@@ -1,0 +1,62 @@
+@charset "UTF-8";
+.topbar {
+  width: 800px;
+  margin: 0 auto;
+  padding: 50px 0;
+  height: auto; }
+.topbar a{
+  font-size: 20px;
+}
+.article-warp {
+  width: 800px;
+  margin: 0 auto; }
+  .article-warp .article-box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px; }
+    .article-warp .article-box .article-info {
+      display: flex;
+      align-items: center; }
+        .article-warp .article-box .article-info .author-photo img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%; }
+      .article-warp .article-box .article-info .author-name {
+        color: #b2b2b2;
+        font-family: 楷体;
+        /*作者信息*/
+        flex: 1;
+        display: flex; }
+        .article-warp .article-box .article-info .author-name div {
+          display: inline-block;
+          margin: 0 5px; }
+        .article-warp .article-box .article-info .author-name div:last-child {
+          flex: 1;
+          position: relative; }
+    .article-warp .article-box .article-body {
+      padding: 10px 0;
+      letter-spacing: 2px;
+      line-height: 1.5rem;
+      color: #b2b2b2; }
+
+.moreDiv {
+  width: 800px;
+  margin: 50px auto; }
+  .moreDiv .more {
+    background-color: #F7F7F7;
+    padding: 5px 35px;
+    border-radius: 30px;
+    margin-left: 380px;
+    color: #060606;
+    font-size: 14px;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s; }
+    .moreDiv .more:hover {
+      background-color: #b2b2b2; }
+
+.footerCenter {
+  width: 800px; }
+
+/*# sourceMappingURL=article.css.map */

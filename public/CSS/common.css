@@ -1,0 +1,150 @@
+/****
+公共CSS
+1、主题颜色
+2、栅格布局
+****/
+html, html body{
+    min-width: 960px;
+}
+/*栅格布局*/
+/*.col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {
+    float: left;
+}*/
+.col-md-12 {
+    width: 100%;
+}
+.col-md-11 {
+    width: 91.66666667%;
+}
+.col-md-10 {
+    width: 83.33333333%;
+}
+.col-md-9 {
+    width: 75%;
+}
+.col-md-8 {
+    width: 66.66666667%;
+}
+.col-md-7 {
+    width: 58.33333333%;
+}
+.col-md-6 {
+    width: 50%;
+}
+.col-md-5 {
+    width: 41.66666667%;
+}
+.col-md-4 {
+    width: 33.33333333%;
+}
+.col-md-3 {
+    width: 25%;
+}
+.col-md-2 {
+    width: 16.66666667%;
+}
+.col-md-1 {
+    width: 8.33333333%;
+}
+.col-md-offset-12 {
+    margin-left: 100%;
+}
+.col-md-offset-11 {
+    margin-left: 91.66666667%;
+}
+.col-md-offset-10 {
+    margin-left: 83.33333333%;
+}
+.col-md-offset-9 {
+    margin-left: 75%;
+}
+.col-md-offset-8 {
+    margin-left: 66.66666667%;
+}
+.col-md-offset-7 {
+    margin-left: 58.33333333%;
+}
+.col-md-offset-6 {
+    margin-left: 50%;
+}
+.col-md-offset-5 {
+    margin-left: 41.66666667%;
+}
+.col-md-offset-4 {
+    margin-left: 33.33333333%;
+}
+.col-md-offset-3 {
+    margin-left: 25%;
+}
+.col-md-offset-2 {
+    margin-left: 16.66666667%;
+}
+.col-md-offset-1 {
+    margin-left: 8.33333333%;
+}
+.col-md-offset-0 {
+    margin-left: 0;
+}
+/*样式重置*/
+ul{
+    list-style: none;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+/*字体--图标*/
+@font-face {
+    font-family: 李旭科毛笔行书;
+    src: url("../font/李旭科毛笔行书/李旭科毛笔行书.ttf");
+}
+/*阿里图标*/
+@font-face {
+    font-family: 'iconfont';  /* project id 825909 */
+    src: url('//at.alicdn.com/t/font_825909_abb4eq63nm9.eot');
+    src: url('//at.alicdn.com/t/font_825909_abb4eq63nm9.eot?#iefix') format('embedded-opentype'),
+    url('//at.alicdn.com/t/font_825909_abb4eq63nm9.woff') format('woff'),
+    url('//at.alicdn.com/t/font_825909_abb4eq63nm9.ttf') format('truetype'),
+    url('//at.alicdn.com/t/font_825909_abb4eq63nm9.svg#iconfont') format('svg');
+}
+.iconfont{
+    font-family:"iconfont" !important;
+    font-size:16px;font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;}
+/*颜色设置*/
+.theme-color{
+    /*color: #ff5735;*/
+    color: #ffdc5e;
+}
+.theme-bg-color{
+    /*background-color: #ff5735;*/
+    background-color: #ffdc5e;
+}
+.bg-hui{
+    background-color: #fbfbfb;
+}
+
+.my-input{
+    width: 260px;
+    border: #EEEEEE 1px solid;
+    border-radius: 0px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #333;
+}
+.btn{
+    display: inline-block;
+    zoom: 1;
+    color: white;
+    background-color: #000;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    height: 65px;
+    line-height: 65px;
+    font-size: 18px;
+    width: 178px;
+}

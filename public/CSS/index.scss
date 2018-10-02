@@ -1,0 +1,257 @@
+@charset "UTF-8";
+#warp{
+  animation-duration:4s;
+  -webkit-animation-duration:4s; /* Safari 和 Chrome */
+}
+.banner{
+  /*banner图片*/
+  border: 5px rebeccapurple;
+  height: 464px;
+  position: relative;
+  color: black;
+  overflow: hidden;
+  .banner-item{
+    display: none;
+    height: 464px;
+    &:first-child{
+      display: block;
+    }
+    img{
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+.bannenr-bar{
+  text-align: center;
+  margin-top: 20px;
+  height: 20px;
+  .bar-item{
+    width: 40px;
+    height: 3px;
+    background-color: aliceblue;
+    border-radius: 8px;
+    display: inline-block;
+    margin: 0 4px;
+    cursor: pointer;
+  }
+  .bar-cur{
+    background-color: #ffdc5e;
+  }
+}
+.talk{
+  height: auto;
+  margin: 160px 0;
+  .talk-content{
+    i{
+      font-size: 30px;
+      color: #dedddd;
+    }
+    margin: 0 auto;
+    width: 450px;
+    font-size: 16px;
+    line-height: 1.8rem;
+    text-align: center;
+  }
+  .talk-title{
+    font-size: 24px;
+    color: black;
+    text-align: center;
+    border-bottom: 1px solid #dedddd;
+    padding-bottom: 10px;
+    width: 115px;
+    margin: 0 auto;
+    margin-top: 56px;
+  }
+}
+.content-box{
+  width: 1090px;
+  background-color: #fbfbfb;
+  .content-slogan{
+    font-family: 楷体;
+    font-size: 30px;
+    margin-left: 15%;
+    margin-bottom: 32px;
+  }
+  .content{
+    min-width: 1200px;
+    //margin: 0 auto;
+    /*文章内容块*/
+    .content-item{
+      display: inline-block;
+      width: 450px;
+      height: 366px;
+      margin-bottom: 28px;
+      //margin-right: 40px;
+      border: 1px solid #b2b2b2;
+      padding: 20px;
+      background-color: White;
+      color: gray;
+      overflow: hidden;
+      .author-box{
+        /*文章作者头像，昵称*/
+        .content_photo{
+          border-radius: 50%;
+          margin-right: 14px;
+        }
+        .content-author{
+          height: 40px;
+          line-height: 40px;
+          position: relative;
+          top: 50%;
+          color: #b3b1b1;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+      .content-title{
+        font-size: 24px;
+        margin: 16px 0;
+        color: black;
+        line-height: 1.6em;
+      }
+      .content-body{
+      /*文章快主体*/
+        line-height: 1.8em;
+        font-size: 16px;
+        color: #5d5b5b;
+      }
+      &:hover{
+        box-shadow: 3px 3px 3px #dcdcdc;
+      }
+    }
+  }
+  .content-more{
+    /*文章块下方按钮*/
+    a{
+      background-color: #dcdcdc;
+      margin-left: 15%;
+      padding: 5px 35px;
+      border-radius: 30px;
+      color: #000000;
+      font-size: 32px;
+      -webkit-transition: all 0.5s;
+      -moz-transition: all 0.5s;
+      -o-transition: all 0.5s;
+      transition: all 0.5s;
+      display: block;
+      width: 20px;
+      text-align: center;
+    }
+  }
+
+}
+.content-warp{
+  background-color: #fbfbfb;
+  padding: 70px 0;
+  .content-box{
+    width: 1096px;
+    height: auto;
+    margin: 0 auto;
+    .content-slogan{
+      font-size: 30px;
+      margin-left: 28px;
+      margin-bottom: 32px;
+    }
+    .box{
+      &::after{
+        content: ".";
+        display: block;
+        clear: both;
+        font-size: 0;
+        height: 0;
+        line-height: 0;
+        visibility: hidden;
+        overflow: hidden;
+      }
+      .content-item{
+        &:hover{
+          box-shadow: 2px 5px 8px 0 #e8e8e8;
+        }
+        display: block;
+        width: 490px;
+        height: 360px;
+        float: left;
+        margin-right: 35px;
+        margin-bottom: 28px;
+        text-decoration: none;
+        border: 1px solid #f3f3f3;
+        padding: 20px;
+        background-color: White;
+        color: gray;
+        overflow: hidden;
+        .author-photo{
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          margin-right: 14px;
+          float: left;
+        }
+        .author-name{
+          //width: 400px;
+          height: 40px;
+          line-height: 40px;
+          color: #b3b1b1;
+          overflow: hidden;
+          float: left;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+        .content-title{
+          font-size: 24px;
+          margin: 16px 0;
+          color: black;
+          line-height: 1.6em;
+        }
+        .content-body{
+          line-height: 1.8em;
+          font-size: 16px;
+          color: #5d5b5b;
+        }
+      }
+    }
+    .content-more{
+      text-decoration: none;
+      background-color: #dcdcdc;
+      padding: 5px 35px;
+      border-radius: 30px;
+      margin-left: 30px;
+      color: #000000;
+      font-size: 32px;
+      -webkit-transition: all 0.5s;
+      -moz-transition: all 0.5s;
+      -o-transition: all 0.5s;
+      transition: all 0.5s;
+      display: block;
+      width: 20px;
+      text-align: center;
+    }
+  }
+}
+.content-bottom{
+  //width: 1096px;
+  height: auto;
+  margin: 158px auto;
+  font-size:20px;
+  text-align:center;
+}
+.footer{
+  margin-top: 80px;
+  background-color: whitesmoke;
+}
+.footerCenter{
+  margin: 0 auto;
+  padding-top: 30px;
+  padding-bottom: 180px;
+  width: 1096px;
+  .links{
+    margin-bottom: 16px;
+    a{
+      margin-right: 22px;
+      color: #060606;
+    }
+  }
+}
+

@@ -1,0 +1,21 @@
+<div class="topbar col-md-12">
+    <div class="header-menu">
+        <div class="logo col-md-3 col-md-offset-1">
+            <div class="theme-bg-color logo-icon"></div>
+            <div><a href="/">静夜思</a></div>
+        </div>
+        <div class="bar col-md-5">
+            <ul class="nav-warp">
+                <% if(!user){%>
+                <li><b><a href="/login">登录/注册</a></b></li>
+                <%} else {%>
+                <li><b><a href="/user"><%= user%></a></b></li>
+                <%}%>
+                <li><b><a href="/topic">主题活动</a></b></li>
+                <li><b><a href="/regular">常规活动</a></b></li>
+                <li><b><a href="/write">写文章</a></b></li>
+                <li><b><a href="/article">文章列表</a></b></li>
+            </ul>
+        </div>
+    </div>
+</div>

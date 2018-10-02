@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/normalize/8.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/CSS/common.css">
+    <link rel="stylesheet" href="/CSS/footer.css">
+    <link rel="stylesheet" href="../CSS/index.css">
+    <link rel="stylesheet" href="../CSS/topbar.css">
+    <title>Title</title>
+</head>
+
+<body>
+    <div id="warp" class="animated fadeIn">
+        <%include ./HTML/common/topbar.html %>
+        <div class="banner col-md-12">
+            <a href="javascript:void(0)" class="banner-item">
+                <img class="bannenr-img" src="../img/1.png" alt="">
+            </a>
+            <a href="javascript:void(0)" class="banner-item" style="display: none">
+                <img class="bannenr-img" src="../img/2.jpg" alt="">
+            </a>
+        </div>
+        <div class="bannenr-bar col-md-12">
+            <div class="bar-item bar-cur" index="0"></div>
+            <div class="bar-item" index="1"></div>
+        </div>
+        <div class="talk col-md-12">
+            <div class="talk-content">
+                <i class="iconfont">&#xebb8;</i>
+                认识世界的工具其实有很多，<br />但是穷人能用得起的不多。
+                <i class="iconfont">&#xe7d2;</i>
+            </div>
+            <div class="talk-title">YUE 读</div>
+        </div>
+        <div class="content-warp col-md-12">
+            <div class="content-box" style="width: 1148px;">
+                <div class="content-slogan">一些文字</div>
+                <div class="box" id="content-box">
+                    <a class="content-item" href='#' target="_blank">
+                        <div class="box" style="position: relative;">
+                            <img class="author-photo" src='../img/3.jpg' />
+                            <div class="author-name" style="vertical-align:middle;">陈小刖</div>
+                            <div class="author-name" style="padding-left: 10px;">2016-08-09</div>
+                        </div>
+                        <div class="content-title">寻一个目标&nbsp;&nbsp;找一股动力&nbsp;&nbsp;热爱生活</div>
+                        <div class="content-body">去写日记&nbsp;&nbsp;&nbsp;&nbsp;感觉生活没有目标&nbsp;&nbsp;&nbsp;&nbsp;只是不断的听说&nbsp;&nbsp;谁谁谁&nbsp;&nbsp;的业……</div>
+                    </a>
+                </div>
+                <a href="/article" target="" class="content-more">···</a>
+            </div>
+        </div>
+        <div class="content-bottom col-md-12">
+            <p>诗酒趁年华。。。</p>
+        </div>
+        <%include ./HTML/common/footer.html %>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/JS/index.js"></script>
+</body>
+
+</html>

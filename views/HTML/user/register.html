@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link href="https://cdn.bootcss.com/normalize/8.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../CSS/common.css">
+</head>
+<style>
+    html ,html body{
+        width: 100%;
+        height: 100%;
+    }
+    .warp{
+        width: 100%;
+        height: 100%;
+    }
+    .content-left{
+        width: 30%;
+        height: 100%;
+        float: left;
+        font-size: 30px;
+        line-height: 1em;
+        font-family: sans-serif,caecilia, times;
+        text-align: right;
+        padding-right: 45px;
+        background-color: #ffdc5e;
+        display: block;
+    }
+    .content-left div{
+        padding-right: 5px;
+        border-right: 2px solid black;
+        margin-bottom: 20px;
+    }
+    .register-form{
+        float: left;
+        padding-left: 50px;
+        padding-top: 22px;
+        width: 60%;
+    }
+    .head-titel a{
+        font-size: 20px;
+    }
+</style>
+
+<body>
+    <div class="warp">
+        <div class="content-left">
+            <div style="margin-top:100px">遇</div>
+            <div>见</div>
+            <div>一</div>
+            <div>群</div>
+            <div>坑</div>
+        </div>
+        <div class="content-right">
+            <div class="register-form">
+                <div class="head-titel">
+                    <a href="/login" style="color:#dcdada;">登录</a>
+                    <a href="javascript:void(0)" style="margin-left:20px;color:Black; border-bottom: 2px solid black;padding-bottom: 5px">注册</a>
+                    <a href="/" style="margin-left:20px;color:#dcdada;">首页</a>
+                </div>
+                <div style="margin:30px 0;">
+                    <input type="text" id="username" name="user" class="my-input" placeholder="用户名" /><span></span>
+                </div>
+                <div style="margin-bottom:30px;position: relative;">
+                    <input type="text" id="password" name="password" class="my-input" autocomplete="off" style="padding-right: 28px;width: 246px;"
+                        placeholder="密码" />
+                    <span></span>
+                </div>
+                <div style="margin-bottom:30px;position: relative;">
+                    <input type="text" id="email" name="password" class="my-input" autocomplete="off" style="padding-right: 28px;width: 246px;"
+                        placeholder="用户邮箱" />
+                    <span></span>
+                </div>
+                <p style="margin-top:34px;">
+                    <a href="/login" class="findpass" style="color: grey;">已有账号?前往登录</a>
+                </p>
+                <p style="margin-top:14px">
+                    <button type="submit" id="btnRegister" class="btn" style="width: 288px;"><span>注册</span></button>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script>
+    <script>
+        $(function () {
+            $('#btnRegister').click(function () {
+                layer.load(1);
+
+                var username = $('#username').val(),
+                    password = $('#password').val();
+                email = $('#email').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "http://127.0.0.1:3000/userregister",
+                    data: {
+                        'username': username,
+                        'password': password,
+                        'email': email
+                    },
+                    success: function (result) {
+                        layer.closeAll('loading');
+                        if (result.code === 200) {
+                            layer.msg('注册成功，3秒后跳往登录页')
+                            setTimeout(function(){
+                                window.location.href="http://127.0.0.1:3000/login"
+                            },3000)
+                        }else{
+                            layer.msg(result.msg)
+                        }
+                    }
+                });
+            })
+        })
+    </script>
+</body>
+
+</html>
